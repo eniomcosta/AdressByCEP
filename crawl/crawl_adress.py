@@ -15,14 +15,13 @@ class CrawlAdress:
 
 	def getAdress(self):
 		soup = BeautifulSoup(self.html, 'html.parser')
-		
-		trs = soup.find("table",{"bgcolor" : "gray"}).tr
 
-		if not trs:
+		if soup.find_all("title")[1].get_text() == "Erro":
 			print "Não foi encontrado nenhum endereço com o CEP informado"
 			return
-
 		else:
+			trs = soup.find("table",{"bgcolor" : "gray"}).tr
+
 			properties = ['Logradouro','Bairro','Localidade','UF','CEP']
 			cont = 0
 
