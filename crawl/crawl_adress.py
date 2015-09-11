@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import urllib2
+import sys
 from bs4 import BeautifulSoup
 
 class CrawlAdress:
@@ -16,18 +17,19 @@ class CrawlAdress:
 	def getAdress(self):
 		soup = BeautifulSoup(self.html, 'html.parser')
 
-		if soup.find_all("title")[1].get_text() == "Erro":
-			print "Não foi encontrado nenhum endereço com o CEP informado"
-			return
-		else:
-			trs = soup.find("table",{"bgcolor" : "gray"}).tr
+		for title in soup.find_all("title"):
+			if title.get_text() == "Erro":
+				print "Não foi encontrado nenhum endereço com o CEP informado"
+				return	
+				
+		trs = soup.find("table",{"bgcolor" : "gray"}).tr
 
-			properties = ['Logradouro','Bairro','Localidade','UF','CEP']
-			cont = 0
+		properties = ['Logradouro','Bairro','Localidade','UF','CEP']
+		cont = 0
 
-			for td in trs.find_all("td"):
-				print properties[cont]+": "+td.get_text()
-				cont+=1
+		for td in trs.find_all("td"):
+			print properties[cont]+": "+td.get_text()
+			cont+=1
 
 	def getHTML(self):
 		return urllib2.urlopen(self.crawl_url).read()
